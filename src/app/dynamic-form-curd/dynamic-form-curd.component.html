@@ -1,0 +1,57 @@
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+  <div formArrayName="addresses">
+    <div *ngFor="let address of addresses.controls; let i = index">
+      <div [formGroupName]="i" class="address-group">
+        <label>
+          Address: <span class="required">*</span>
+          <input formControlName="address" placeholder="Address" />
+          <span *ngIf="isInvalid(address, 'address')" class="error">
+            {{ getErrorMessage(address, 'address') }}
+          </span>
+        </label>
+        <label>
+          Zip: <span class="required">*</span>
+          <input formControlName="zip" placeholder="Zip" />
+          <span *ngIf="isInvalid(address, 'zip')" class="error">
+            {{ getErrorMessage(address, 'zip') }}
+          </span>
+        </label>
+        <label>
+          State: <span class="required">*</span>
+          <select formControlName="state">
+            <option value="">Select State</option>
+            <option *ngFor="let state of states" [value]="state">{{state}}</option>
+          </select>
+          <span *ngIf="isInvalid(address, 'state')" class="error">
+            {{ getErrorMessage(address, 'state') }}
+          </span>
+        </label>
+        <label>
+          City: <span class="required">*</span>
+          <select formControlName="city">
+            <option value="">Select City</option>
+            <option *ngFor="let city of getCitiesForState(address.get('state')?.value)" [value]="city">{{city}}</option>
+          </select>
+          <span *ngIf="isInvalid(address, 'city')" class="error">
+            {{ getErrorMessage(address, 'city') }}
+          </span>
+        </label>
+        <label>
+          Country: <span class="required">*</span>
+          <select formControlName="country">
+            <option value="">Select Country</option>
+            <option *ngFor="let country of countries" [value]="country">{{country}}</option>
+          </select>
+          <span *ngIf="isInvalid(address, 'country')" class="error">
+            {{ getErrorMessage(address, 'country') }}
+          </span>
+        </label>
+        <button type="button" (click)="removeAddress(i)">Remove Address</button>
+      </div>
+      <hr />
+    </div>
+  </div>
+  <button type="button" (click)="addAddress()">Add Address</button>
+  <button type="submit" [disabled]="!addressForm.valid">Submit</button>
+  <button type="button" (click)="clearAllAddresses()">Clear All Addresses</button>
+</form>
